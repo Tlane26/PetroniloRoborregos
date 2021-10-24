@@ -1,10 +1,22 @@
 
 #include <AFMotor.h>
+// -----------------------------------------------------------
+// Motor DC
+AF_DCMotor motor1(1, MOTOR12_8KHZ)
+AF_DCMotor motor2(2, MOTOR12_8KHZ)
+AF_DCMotor motor3(3, MOTOR12_8KHZ)
+AF_DCMotor motor4(4, MOTOR12_8KHZ)
 
 // -----------------------------------------------------------
 // Sensores de color
 
 // Cableado de TCS3200 a Arduino
+// define pines
+// #define S0 pindondeesta
+// #define S1 pindondeesta
+// #define S2 pindondeesta
+// #define S3 pindondeesta
+// #define salidaSensorColor pindondeesta
 
 // frecuencias de los fotodiodos
 int frecRojo = 0;
@@ -17,6 +29,16 @@ void setup() {
 
 // Iniciar la comunicacion serie 
   Serial.begin(9600);
+
+// -----------------------------------------------------------
+// Motor DC
+
+// Velocidad de motores
+  motor1.setSpeed(200);
+  motor2.setSpeed(200);
+  motor3.setSpeed(200);
+  motor4.setSpeed(200);
+  
   
 // -----------------------------------------------------------
 // Sensores de color
@@ -33,10 +55,33 @@ void setup() {
   // Definiendo la escala de frecuencia a 20%
   digitalWrite(S0,HIGH);
   digitalWrite(S1,LOW);
-  
 
 // -----------------------------------------------------------
+// Sensores ultrasonicos
+
+// Sensor enfrente
+pinMode(TRIG, OUTPUT);
+pinMode(ECO, INPUT);
+// Sensor derecha / izquierda sepa ******
+pinMode(TRIG_D, OUTPUT);
+pinMode(ECO_D, INPUT);
 }
+
+// -----------------------------------------------------------
+// Sensores ultrasonicos
+
+// Sensor enfrente
+int TRIG = ; // pines a donde estan conectados
+int ECO = ; //
+int DURACION;
+int DISTANCIA;
+
+// Sensor derecha
+int TRIG_D = ; // pines a donde estan conectados
+int ECO_D = ; //
+int DURACION_D;
+int DISTANCIA_D;
+
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -46,6 +91,14 @@ void loop() {
   // DISPLAY COLOR
   // SENSORES ULTRASONICOS
 
+}
+
+void avanzar(){
+  motor1.run(FORWARD);
+  motor2.run(FORWARD);
+  motor3.run(FORWARD);
+  motor4.run(FORWARD);       
+  delay(1000);                   // ****** Verificar cuanto tiempo debe de avanzar
 }
 
 void color(){

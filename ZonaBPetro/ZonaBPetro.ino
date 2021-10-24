@@ -1,4 +1,6 @@
-#include <AFMotor.h>
+#include <AFMotor.h> // ADAFRUIT MOTOR SHIELD LIBRARY 
+#include <Servo.h> // LIBRERIA SERVO.H
+
 // -----------------------------------------------------------
 // Motor DC
 AF_DCMotor motor1(1, MOTOR12_8KHZ)
@@ -9,28 +11,56 @@ AF_DCMotor motor4(4, MOTOR12_8KHZ)
 
 // -----------------------------------------------------------
 // Servo Motor
-#include <servo.h> 
 
 Servo servoGarra;
 
+int PINSERVO = 10;   // PIN
+int PULSOMAX = 2000; // Giro 180 grados
+int PULSOMIN = 1000; // Giro 0 grados
 
 // -----------------------------------------------------------
 // Sensores de color
 
 // Cableado de TCS3200 a Arduino
 // define pines
+// #define S0 pindondeesta
+// #define S1 pindondeesta
+// #define S2 pindondeesta
+// #define S3 pindondeesta
+// #define salidaSensorColor pindondeesta
 
 // frecuencias de los fotodiodos
 int frecRojo = 0;
 int frecVerde = 0;
 int frecAzul = 0;
 
+
 // -----------------------------------------------------------
+// Sensores ultrasonicos
+
+// Sensor enfrente
+int TRIG = ; // pines a donde estan conectados
+int ECO = ; //
+int DURACION;
+int DISTANCIA;
+
+// Sensor derecha
+int TRIG_D = ; // pines a donde estan conectados
+int ECO_D = ; //
+int DURACION_D;
+int DISTANCIA_D;
+
+
 
 void setup() {
 
 // Iniciar la comunicacion serie 
   Serial.begin(9600);
+
+// -----------------------------------------------------------
+// Servo
+  servo.attach(PINSERVO, PULSOMIN, PULSOMAX);
+
 
 // -----------------------------------------------------------
 // Motor DC
@@ -51,7 +81,7 @@ void setup() {
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
   
-  // Definiendo salidaSensor como entrada
+  // Definiendo salidaSensorColor como entrada
   pinMode(salidaSensorColor, INPUT);
   
   // Definiendo la escala de frecuencia a 20%
@@ -60,6 +90,16 @@ void setup() {
   
 
 // -----------------------------------------------------------
+// Sensores ultrasonicos
+
+// Sensor enfrente
+pinMode(TRIG, OUTPUT);
+pinMode(ECO, INPUT);
+// Sensor derecha / izquierda sepa ******
+pinMode(TRIG_D, OUTPUT);
+pinMode(ECO_D, INPUT);
+
+
 }
 
 void loop() {
@@ -79,14 +119,36 @@ void avanzar(){
   delay(1000);                   // ****** Verificar cuanto tiempo debe de avanzar
 }
 
+// Sensor ultrasonico enfrente
+void sensorUltraE(){
+  digitalWrite(TRIG, HIGH);
+  delay(1);
+  digitalWrite(TRIG, LOW);
+  DURACION = pulseIn(ECO, HIGH);
+  DISTANCIA = DURACION / 58.2;
+}
+
+// Sensor ultrasonico derecha
+void sensorUltraD(){
+  digitalWrite(TRIG_D, HIGH);
+  delay(1);
+  digitalWrite(TRIG_D, LOW);
+  DURACION_D = pulseIn(ECO_D, HIGH);
+  DISTANCIA_D = DURACION_D / 58.2;
+}
+
 void color(){
-  // Definiendo la lectura de los fotodiodos con filtro rojo
+    // Definiendo la lectura de los fotodiodos con filtro rojo
   digitalWrite(S2,LOW);
   digitalWrite(S3,LOW);
   
   // Leyendo la frecuencia de salida del sensor
   frecRojo = pulseIn(salidaSensorColor, LOW);
 
+  // Mapeando el valor de la frecuencia del ROJO (RED = R) de 0 a 255
+  // Usted debe colocar los valores que registro. Este es un ejemplo: 
+  // colorRojo = map(frecuenciaRojo, 70, 120, 255,0);
+  colorRojo = map(frecuenciaRojo, xx, xx, 255,0);
   
   // Mostrando por serie el valor para el rojo (R = Red)
   Serial.print("R = ");
@@ -100,6 +162,11 @@ void color(){
   // Leyendo la frecuencia de salida del sensor
   frecVerde = pulseIn(salidaSensorColor, LOW);
 
+  // Mapeando el valor de la frecuencia del VERDE (GREEN = G) de 0 a 255
+  // Usted debe colocar los valores que registro. Este es un ejemplo: 
+  // colorVerde = map(frecuenciaVerde, 100, 199, 255,0);
+  colorVerde = map(frecuenciaVerde, xx, xx, 255,0);
+  
   // Mostrando por serie el valor para el verde (G = Green)
   Serial.print(" G = ");
   Serial.print(frecVerde);
@@ -111,15 +178,36 @@ void color(){
   
   // Leyendo la frecuencia de salida del sensor
   frecAzul = pulseIn(salidaSensorColor, LOW);
-                                
+
+  // Mapeando el valor de la frecuencia del AZUL (AZUL = B) de 0 a 255
+  // Usted debe colocar los valores que registro. Este es un ejemplo: 
+  // colorAzul = map(frecuenciaAzul, 38, 84, 255, 0);
+  colorAzul = map(frecuenciaAzul, xx, xx, 255, 0);                                   
+  
   // Mostrando por serie el valor para el azul (B = Blue)
   Serial.print(" B = ");
   Serial.println(frecAzul);
   delay(100);
 
+
+  // Comprobar cual es el color detectado y mostrarlo
+  // con un mensaje en el monitor serie                                            **** Modificarlo a LCD
+  if(colorRojo > colorVerde && colorRojo > colorAzul){
+      Serial.println(" - Detectado ROJO");
+  }
+  if(colorVerde > colorRojo && colorVerde > colorAzul){
+    Serial.println(" - Detectado VERDE");
+  }
+  if(colorAzul > colorRojo && colorAzul > colorVerde){
+    Serial.println(" - Detectado AZUL");
+  }
+
 }
 
-void garra(){
+void levantarGarra(){
+  servoGarra.write(0);
+}
 
-  
+void bajarGarra(){
+  servoGarra.write(180);
 }
