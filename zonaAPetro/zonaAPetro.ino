@@ -10,20 +10,46 @@ AF_DCMotor motor4(4, MOTOR12_8KHZ)
 // -----------------------------------------------------------
 // Sensores de color
 
+// Sensor Derecho
 // Cableado de TCS3200 a Arduino
-// define pines
-// #define S0 pindondeesta
-// #define S1 pindondeesta
-// #define S2 pindondeesta
-// #define S3 pindondeesta
-// #define salidaSensorColor pindondeesta
+ #define S0 22
+ #define S1 24
+ #define S2 26
+ #define S3 28
+ #define salidaSensorColor 30
 
 // frecuencias de los fotodiodos
 int frecRojo = 0;
 int frecVerde = 0;
 int frecAzul = 0;
 
+// Sensor Izquierdo
+// Cableado de TCS3200 a Arduino
+ #define S0_I 22
+ #define S1_I 24
+ #define S2_I 26
+ #define S3_I 28
+ #define salidaSensorColor_I 30
+
+// frecuencias de los fotodiodos
+int frecRojo_I = 0;
+int frecVerde_I = 0;
+int frecAzul_I = 0;
+
 // -----------------------------------------------------------
+// Sensores ultrasonicos
+
+// Sensor enfrente
+int TRIG = 51; // pin
+int ECO = 50; 
+int DURACION;
+int DISTANCIA;
+
+// Sensor derecha
+int TRIG_D = ; // pin
+int ECO_D = ; //
+int DURACION_D;
+int DISTANCIA_D;
 
 void setup() {
 
@@ -43,6 +69,7 @@ void setup() {
 // -----------------------------------------------------------
 // Sensores de color
 
+// Sensor Derecho
  // Definiendo las Salidas
   pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
@@ -56,6 +83,20 @@ void setup() {
   digitalWrite(S0,HIGH);
   digitalWrite(S1,LOW);
 
+// Sensor Izquierdo
+   // Definiendo las Salidas
+  pinMode(S0_I, OUTPUT);
+  pinMode(S1_I, OUTPUT);
+  pinMode(S2_I, OUTPUT);
+  pinMode(S3_I, OUTPUT);
+  
+  // Definiendo salidaSensor como entrada
+  pinMode(salidaSensorColor_I, INPUT);
+  
+  // Definiendo la escala de frecuencia a 20%
+  digitalWrite(S0_I,HIGH);
+  digitalWrite(S1_I,LOW);
+
 // -----------------------------------------------------------
 // Sensores ultrasonicos
 
@@ -67,20 +108,7 @@ pinMode(TRIG_D, OUTPUT);
 pinMode(ECO_D, INPUT);
 }
 
-// -----------------------------------------------------------
-// Sensores ultrasonicos
 
-// Sensor enfrente
-int TRIG = ; // pines a donde estan conectados
-int ECO = ; //
-int DURACION;
-int DISTANCIA;
-
-// Sensor derecha
-int TRIG_D = ; // pines a donde estan conectados
-int ECO_D = ; //
-int DURACION_D;
-int DISTANCIA_D;
 
 
 void loop() {
