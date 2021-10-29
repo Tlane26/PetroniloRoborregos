@@ -183,11 +183,14 @@ int sensorColorD(){
 
 void sumaBinario(int &sumaIzq, int &sumaDer){
   int sumaTotal = sumaIzq + sumaDer;
-  String binario;
-    while (sumaTotal != 0){
-        binario += ( sumaTotal % 2 == 0 ? "0" : "1" );
-        sumaTotal /= 2;
-    }
+  String binario, bin;
+  while (sumaTotal != 0){
+      binario += ( sumaTotal % 2 == 0 ? "0" : "1" );
+      sumaTotal /= 2;
+  }
+//  for(int n = binario.length()-1; n >= 0; n--){
+//    bin.push_back(binario[n]);
+//  }
 
   lcd.init();
   lcd.backlight();
