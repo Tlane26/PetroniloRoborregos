@@ -4,6 +4,15 @@
 #define S3 28    // S3 a pin 7  blanco
 #define salidaTCS 30 // salidaTCS a pin 8  verde
 
+/*
+ * izquierdo
+ * #define S0 32    // S0 a pin 4  morado
+#define S1 34    // S1 a pin 5  azul
+#define S2 36    // S2 a pin 6  gris
+#define S3 38    // S3 a pin 7  blanco
+#define salidaTCS 40 // salidaTCS a pin 8  verde
+ */
+
 
 void setup() {
   pinMode(S0, OUTPUT);    // pin 4 como salida
