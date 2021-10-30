@@ -1,17 +1,21 @@
-#define S0 22    // S0 a pin 4  morado
-#define S1 24    // S1 a pin 5  azul
-#define S2 26    // S2 a pin 6  gris
-#define S3 28    // S3 a pin 7  blanco
-#define salidaTCS 30 // salidaTCS a pin 8  verde
+// izquierdo
+//#define S0 22    // S0 a pin 4  morado
+//#define S1 24    // S1 a pin 5  azul
+//#define S2 26    // S2 a pin 6  gris
+//#define S3 28    // S3 a pin 7  blanco
+//#define salidaTCS 30 // salidaTCS a pin 8  verde
 
-/*
- * izquierdo
- * #define S0 32    // S0 a pin 4  morado
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+
+// * derecho
+#define S0 32    // S0 a pin 4  morado
 #define S1 34    // S1 a pin 5  azul
 #define S2 36    // S2 a pin 6  gris
 #define S3 38    // S3 a pin 7  blanco
 #define salidaTCS 40 // salidaTCS a pin 8  verde
- */
 
 
 void setup() {
@@ -25,6 +29,8 @@ void setup() {
   digitalWrite(S1,LOW);   // del modulo al 20 por ciento
   
   Serial.begin(9600);   // inicializa monitor serie a 9600 bps
+  lcd.init();
+  lcd.backlight();
 }
 
 void loop() {
@@ -57,70 +63,36 @@ void loop() {
   Serial.print("A:");     // muestra texto
   Serial.println(azul);     // muestra valor de variable azul
             // y salto de linea
-            
 
-//
-//             // Definiendo la lectura de los fotodiodos con filtro rojo
-//  digitalWrite(S2,LOW);
-//  digitalWrite(S3,LOW);
-//  
-//  // Leyendo la frecuencia de salida del sensor
-//  frecRojo = pulseIn(salidaSensorColor, LOW);
-//
-//  // Mapeando el valor de la frecuencia del ROJO (RED = R) de 0 a 255
-//  // Usted debe colocar los valores que registro. Este es un ejemplo: 
-//  // colorRojo = map(frecuenciaRojo, 70, 120, 255,0);
-//  colorRojo = map(frecuenciaRojo, xx, xx, 255,0);
-//  
-//  // Mostrando por serie el valor para el rojo (R = Red)
-//  Serial.print("R = ");
-//  Serial.print(frecRojo);
-//  delay(100);
-//  
-//  // Definiendo la lectura de los fotodiodos con filtro verde
-//  digitalWrite(S2,HIGH);
-//  digitalWrite(S3,HIGH);
-//  
-//  // Leyendo la frecuencia de salida del sensor
-//  frecVerde = pulseIn(salidaSensorColor, LOW);
-//
-//  // Mapeando el valor de la frecuencia del VERDE (GREEN = G) de 0 a 255
-//  // Usted debe colocar los valores que registro. Este es un ejemplo: 
-//  // colorVerde = map(frecuenciaVerde, 100, 199, 255,0);
-//  colorVerde = map(frecuenciaVerde, xx, xx, 255,0);
-//  
-//  // Mostrando por serie el valor para el verde (G = Green)
-//  Serial.print(" G = ");
-//  Serial.print(frecVerde);
-//  delay(100);
-// 
-//  // Definiendo la lectura de los fotodiodos con filtro azul
-//  digitalWrite(S2,LOW);
-//  digitalWrite(S3,HIGH);
-//  
-//  // Leyendo la frecuencia de salida del sensor
-//  frecAzul = pulseIn(salidaSensorColor, LOW);
-//
-//  // Mapeando el valor de la frecuencia del AZUL (AZUL = B) de 0 a 255
-//  // Usted debe colocar los valores que registro. Este es un ejemplo: 
-//  // colorAzul = map(frecuenciaAzul, 38, 84, 255, 0);
-//  colorAzul = map(frecuenciaAzul, xx, xx, 255, 0);                                   
-//  
-//  // Mostrando por serie el valor para el azul (B = Blue)
-//  Serial.print(" B = ");
-//  Serial.println(frecAzul);
-//  delay(100);
-//
-//
-//  // Comprobar cual es el color detectado y mostrarlo
-//  // con un mensaje en el monitor serie                                            **** Modificarlo a LCD
-//  if(colorRojo > colorVerde && colorRojo > colorAzul){
-//      Serial.println(" - Detectado ROJO");
-//  }
-//  if(colorVerde > colorRojo && colorVerde > colorAzul){
-//    Serial.println(" - Detectado VERDE");
-//  }
-//  if(colorAzul > colorRojo && colorAzul > colorVerde){
-//    Serial.println(" - Detectado AZUL");
-//  }
+
+            /*
+             * Rojo:   r: 75  v: 160  a: 63
+             * Azul:   r: 165  v: 200   a: 95
+             * Verde:  r: 140  v: 150  a: 75
+             * amarillo: r: 90  v: 140  a: 65
+             * magenta: r: 90  v: 215  a: 68
+             * ne
+             *
+             */
+  if(verde < 100 && rojo > 110 && azul > 30){
+    Serial.println("VERDE");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("VERDE");
+  }
+  else if(rojo < 60 && verde > 120 && azul > 25){
+    Serial.println("ROJO");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("ROJO");
+  }
+  else if(azul < 50 && verde > 135 && rojo > 150){
+    Serial.println("AZUL");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("AZUL");
+  }
+  delay(2000);
+
+
 }

@@ -16,18 +16,18 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 AF_DCMotor motor1(1, MOTOR12_8KHZ);
 AF_DCMotor motor2(2, MOTOR12_8KHZ);
 AF_DCMotor motor3(3, MOTOR12_8KHZ);
-AF_DCMotor motor4(4, MOTOR12_8KHZ);
+//AF_DCMotor motor4(4, MOTOR12_8KHZ);
 
 // -----------------------------------------------------------
 // Sensores de color
 
 // Sensor Derecho
 // Cableado de TCS3200 a Arduino
- #define S0 22
- #define S1 24
- #define S2 26
- #define S3 28
- #define salidaSensorColor 30
+ #define S0 32
+ #define S1 34
+ #define S2 36
+ #define S3 38
+ #define salidaSensorColor 40
 
 // frecuencias de los fotodiodos
 int frecRojo = 0;
@@ -36,11 +36,11 @@ int frecAzul = 0;
 
 // Sensor Izquierdo
 // Cableado de TCS3200 a Arduino
- #define S0_I 32
- #define S1_I 34
- #define S2_I 36
- #define S3_I 38
- #define salidaSensorColor_I 40
+ #define S0_I 22
+ #define S1_I 24
+ #define S2_I 26
+ #define S3_I 28
+ #define salidaSensorColor_I 30
 
 // frecuencias de los fotodiodos
 int frecRojo_I = 0;
@@ -85,7 +85,7 @@ void setup() {
   motor1.setSpeed(250);
   motor2.setSpeed(250);
   motor3.setSpeed(250);
-  motor4.setSpeed(250);
+//  motor4.setSpeed(250);
   
   
 // -----------------------------------------------------------
@@ -133,15 +133,15 @@ void avanzar(){
   motor1.run(FORWARD);
   motor2.run(FORWARD);
   motor3.run(FORWARD);
-  motor4.run(FORWARD);       
-  delay(200);                   // ****** Verificar cuanto tiempo debe de avanzar
+//  motor4.run(FORWARD);       
+  delay(900);                   
 }
 
 void detener(){
   motor1.run(RELEASE);
   motor2.run(RELEASE);
   motor3.run(RELEASE);
-  motor4.run(RELEASE);
+//  motor4.run(RELEASE);
 }
 
 int sensorUltraE(){
@@ -160,24 +160,135 @@ void girarD(){
   motor1.run(FORWARD);
   motor2.run(BACKWARD);
   motor3.run(FORWARD);
-  motor4.run(BACKWARD);      
-  delay(1000);
+//  motor4.run(BACKWARD);      
+  delay(1400);
 }
 
 void girarI(){
   motor1.run(BACKWARD);
   motor2.run(FORWARD); 
   motor3.run(BACKWARD);
-  motor4.run(FORWARD);       
-  delay(1000);
+//  motor4.run(FORWARD);       
+  delay(1400);
 }
 
 int sensorColorI(){
   
+  digitalWrite(S2_I,LOW);     
+  digitalWrite(S3_I,LOW);    
+  int rojo_I = pulseIn(salidaSensorColor_I, LOW); 
+  delay(200);       
+  
+  digitalWrite(S2_I,HIGH);    
+  digitalWrite(S3_I,HIGH);    
+  int verde_I = pulseIn(salidaSensorColor_I, LOW);  
+  delay(200);       
+  
+  digitalWrite(S2_I,LOW);     
+  digitalWrite(S3_I,HIGH);    
+  int azul_I = pulseIn(salidaSensorColor_I, LOW); 
+  delay(200);       
+  
+  Serial.print("R:");     
+  Serial.print(rojo_I);     
+
+  Serial.print("\t");     
+
+  Serial.print("V:");     
+  Serial.print(verde_I);      
+
+  Serial.print("\t");     
+
+  Serial.print("A:");     
+  Serial.println(azul_I);     
+            
+        
+  if(verde_I < 100 && rojo_I > 110 && azul_I > 30){ // calibrar
+    Serial.println("AMARILLO");
+    return 1;
+  }
+  else if(rojo_I < 60 && verde_I > 120 && azul_I > 25){ // calibrar
+    Serial.println("VERDE");
+    return 2;
+  }
+  else if(azul_I < 50 && verde_I > 135 && rojo_I > 150){ // calibrar
+    Serial.println("NEGRO");
+    return 3;
+  }
+  else if(azul_I < 50 && verde_I > 135 && rojo_I > 150){ // calibrar
+    Serial.println("MAGENTA");
+    return 4;
+  }
+  else if(azul_I < 50 && verde_I > 135 && rojo_I > 150){ // calibrar
+    Serial.println("BLANCO");
+    return 0;
+  }
+  delay(2000);
+  
 }
 
 int sensorColorD(){
+  digitalWrite(S2,LOW);     
+  digitalWrite(S3,LOW);    
+  int rojo = pulseIn(salidaSensorColor, LOW); 
+  delay(200);       
   
+  digitalWrite(S2,HIGH);    
+  digitalWrite(S3,HIGH);    
+  int verde = pulseIn(salidaSensorColor, LOW);  
+  delay(200);       
+  
+  digitalWrite(S2,LOW);     
+  digitalWrite(S3,HIGH);    
+  int azul = pulseIn(salidaSensorColor, LOW); 
+  delay(200);       
+  
+  Serial.print("R:");     
+  Serial.print(rojo);     
+
+  Serial.print("\t");     
+
+  Serial.print("V:");     
+  Serial.print(verde);      
+
+  Serial.print("\t");     
+
+  Serial.print("A:");     
+  Serial.println(azul);     
+            
+
+
+            /*
+             * derecho
+             * Rojo:   r: 75  v: 160  a: 63
+             * Azul:   r: 165  v: 200   a: 95
+             * Verde:  r: 140  v: 150  a: 75
+             * amarillo: r: 90  v: 140  a: 65
+             * magenta: r: 90  v: 215  a: 68
+             * ne
+             *
+             */
+  if(verde < 100 && rojo > 110 && azul > 30){ // calibrar
+    Serial.println("AMARILLO");
+    return 1;
+  }
+  else if(rojo < 60 && verde > 120 && azul > 25){ // calibrar
+    Serial.println("VERDE");
+    return 2;
+  }
+  else if(azul < 50 && verde > 135 && rojo > 150){ // calibrar
+    Serial.println("NEGRO");
+    return 3;
+  }
+  else if(azul < 50 && verde > 135 && rojo > 150){ // calibrar
+    Serial.println("MAGENTA");
+    return 4;
+  }
+  else if(azul < 50 && verde > 135 && rojo > 150){ // calibrar
+    Serial.println("BLANCO");
+    return 0;
+  }
+  delay(2000);
 }
 
 
@@ -188,15 +299,17 @@ void sumaBinario(int &sumaIzq, int &sumaDer){
       binario += ( sumaTotal % 2 == 0 ? "0" : "1" );
       sumaTotal /= 2;
   }
-//  for(int n = binario.length()-1; n >= 0; n--){
-//    bin.push_back(binario[n]);
-//  }
-
-  lcd.init();
-  lcd.backlight();
   lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print(binario);
+  for(int n = binario.length()-1; n >= 0; n--){
+    lcd.setCursor(0,n);
+    lcd.print(binario[n]);
+  }
+
+//  lcd.init();
+//  lcd.backlight();
+//  lcd.clear();
+//  lcd.setCursor(0,0);
+//  lcd.print(binario);
 }
 
 
